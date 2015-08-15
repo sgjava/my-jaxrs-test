@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/my-jaxrs-test">
+    <Valve className="org.apache.catalina.valves.StuckThreadDetectionValve" threshold="20" />
+</Context>
