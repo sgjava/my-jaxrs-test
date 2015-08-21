@@ -69,12 +69,6 @@ public class UserServiceAuthTest {
                 "http://%s:%s/my-jaxrs-test/user/v1/userinfo/",
                 configuration.getHost(), configuration.getHttpPort());
         log.info(url);
-        /*
-         try {
-         Thread.sleep(60000);
-         } catch (InterruptedException ex) {
-         }
-         */
         final Client client = ClientBuilder.newClient().register(
                 ClientRequestLoggingFilter.class).register(
                         new ClientRequestAuthFilter("tomcat", "password"));

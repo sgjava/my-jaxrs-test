@@ -60,6 +60,17 @@
             <scope>provided</scope>
         </dependency>
         <!-- Compile dependency -->
+        <dependency>
+            <groupId>org.jsr107.ri</groupId>
+            <artifactId>cache-annotations-ri-cdi</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>jcache</artifactId>
+            <version>1.0.1</version>
+            <scope>compile</scope>
+        </dependency>        
         <!-- Test dependency -->
         <dependency>
             <groupId>junit</groupId>
