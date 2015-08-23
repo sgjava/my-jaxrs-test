@@ -67,7 +67,8 @@ public class CacheBeanTest {
      * Tear down.
      */
     @After
-    public void tearDown() {
+    public void tearDown() throws NamingException {
+        container.getContext().unbind("inject");
         container.close();
     }
 
@@ -78,10 +79,14 @@ public class CacheBeanTest {
     public final void testCache() {
         log.info("testCache");
         assertNotNull(cacheBean);
+        log.info(String.format("Cache names: %s", cacheBean.getCacheManager().
+                getCacheNames()));
+        keyValueBean.add("key1", "value1");
         final Cache<String, String> testCache = cacheBean.getCacheManager().
                 getCache("testCache");
-        keyValueBean.add("key1", "value1");
         log.info(String.format("Cache name: %s", testCache.getName()));
+        // This should display value1, but it doesn't
         log.info(String.format("Value: %s", testCache.get("key1")));
+        testCache.close();
     }
 }
