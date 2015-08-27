@@ -1,5 +1,6 @@
 package com.codeferm.services.jaxrs;
 
+import java.util.Iterator;
 import java.util.logging.Logger;
 import javax.cache.Cache;
 import javax.ejb.EJB;
@@ -82,11 +83,18 @@ public class CacheBeanTest {
         log.info(String.format("Cache names: %s", cacheBean.getCacheManager().
                 getCacheNames()));
         keyValueBean.add("key1", "value1");
+        keyValueBean.add("key2", "value2");
+        keyValueBean.add("key3", "value3");
         final Cache<String, String> testCache = cacheBean.getCacheManager().
                 getCache("testCache");
-        log.info(String.format("Cache name: %s", testCache.getName()));
-        // This should display value1, but it doesn't
-        log.info(String.format("Value: %s", testCache.get("key1")));
+        // Nothing displays here
+        Iterator<Cache.Entry<String, String>> allCacheEntries = testCache.
+                iterator();
+        while (allCacheEntries.hasNext()) {
+            Cache.Entry<String, String> currentEntry = allCacheEntries.next();
+            log.info("Key: " + currentEntry.getKey() + " Value: "
+                    + currentEntry.getValue());
+        }
         testCache.close();
     }
 }
