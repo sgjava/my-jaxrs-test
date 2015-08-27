@@ -92,8 +92,8 @@ public class CacheBeanTest {
                 iterator();
         while (allCacheEntries.hasNext()) {
             Cache.Entry<String, String> currentEntry = allCacheEntries.next();
-            log.info("Key: " + currentEntry.getKey() + " Value: "
-                    + currentEntry.getValue());
+            log.info(String.format("Key: %s, Value: %s", currentEntry.getKey(),
+                    currentEntry.getValue()));
         }
         testCache.close();
     }
