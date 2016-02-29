@@ -1,22 +1,18 @@
 package com.codeferm.services.jaxrs;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.embeddable.EJBContainer;
-import javax.naming.Context;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
-import static org.apache.openejb.loader.JarLocation.jarLocation;
-import org.apache.tomee.embedded.EmbeddedTomEEContainer;
-import org.apache.ziplock.Archive;
+import org.apache.tomee.embedded.Container;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertNotNull;
@@ -33,29 +29,31 @@ public class UserServiceTest {
     private static final Logger log = Logger.getLogger(UserServiceTest.class.
             getName());
     /**
-     * EJB container.
+     * TomEE container.
      */
-    private static EJBContainer container;
+    private static Container container;
+    /**
+     * TomEE container tomeeConfig.
+     */
+    private static org.apache.tomee.embedded.Configuration tomeeConfig;
 
     /**
      * Start EJB container.
      */
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws Exception {
         log.info("setUpClass()");
-        final Map p = new HashMap();
-        p.put(Context.INITIAL_CONTEXT_FACTORY,
-                "org.apache.openejb.core.LocalInitialContextFactory");
-        p.put("openejb.embedded.initialcontext.close ", "DESTROY");
-        p.put("openejb.embedded.remotable", "true");
-        p.put(EJBContainer.APP_NAME, "my-jaxrs-test");
-        p.put(EJBContainer.PROVIDER, "tomee-embedded");
-        // Add WAR and MDB modules
-        p.put(EJBContainer.MODULES, new File[]{Archive.archive().copyTo(
-            "WEB-INF/classes", jarLocation(UserService.class)).asDir()});
-        // Random port
-        p.put(EmbeddedTomEEContainer.TOMEE_EJBCONTAINER_HTTP_PORT, "-1");
-        container = EJBContainer.createEJBContainer(p);
+        // App appConfig
+        // tomee-embedded tomeeConfig
+        tomeeConfig = new org.apache.tomee.embedded.Configuration().
+                randomHttpPort();
+        container = new Container();
+        container.setup(tomeeConfig);
+        container.start();
+        container.deployClasspathAsWebApp("/my-jaxrs-test", new File(
+                "src/main/webapp"));
+        log.info(String.format("TomEE embedded started on %s:%s", tomeeConfig.
+                getHost(), tomeeConfig.getHttpPort()));
     }
 
     /**
@@ -86,9 +84,8 @@ public class UserServiceTest {
     @Test
     public final void testUserInfoNoTimeout() {
         log.info("testUserInfoNoTimeout");
-        final String url = "http://127.0.0.1:" + System.getProperty(
-                EmbeddedTomEEContainer.TOMEE_EJBCONTAINER_HTTP_PORT)
-                + "/my-jaxrs-test/user/v1/userinfo/";
+        String url = String.format("http://%s:%s%s", tomeeConfig.getHost(),
+                tomeeConfig.getHttpPort(), "/my-jaxrs-test/user/v1/userinfo/");
         final Client client = ClientBuilder.newClient();
         // Get back test user's info
         final UserDto userDto = new UserDto(1, null, null);
@@ -99,14 +96,33 @@ public class UserServiceTest {
     }
 
     /**
+     * Test JAX-RS client with List of DTOs.
+     */
+    @Test
+    public final void testUserList() {
+        log.info("testUserList");
+        String url = String.format("http://%s:%s%s", tomeeConfig.getHost(),
+                tomeeConfig.getHttpPort(),
+                "/my-jaxrs-test/user/v1/userinfolist/");
+        final Client client = ClientBuilder.newClient();
+        final UserDto userDto = new UserDto(1, "test", "Test User");
+        // Get back test users info list
+        List<UserDto> response = client.target(url).request().post(Entity.
+                entity(userDto, MediaType.APPLICATION_JSON),
+                new GenericType<List<UserDto>>() {
+        });
+        assertNotNull(response);
+        log.info(String.format("Response: %s", response));
+    }
+
+    /**
      * Test JAX-RS client with proprietary timeouts.
      */
     @Test(expected = Exception.class)
     public final void testUserInfoTimeoutProprietary() {
         log.info("testUserInfoTimeoutProprietary");
-        final String url = "http://127.0.0.1:" + System.getProperty(
-                EmbeddedTomEEContainer.TOMEE_EJBCONTAINER_HTTP_PORT)
-                + "/my-jaxrs-test/user/v1/userinfo/";
+        String url = String.format("http://%s:%s%s", tomeeConfig.getHost(),
+                tomeeConfig.getHttpPort(), "/my-jaxrs-test/user/v1/userinfo/");
         final Client client = ClientBuilder.newClient();
         // Timeout not covered by client properties
         final WebTarget target = client.target(url);
@@ -130,9 +146,8 @@ public class UserServiceTest {
     @Test(expected = Exception.class)
     public final void testUserInfoTimeout() {
         log.info("testUserInfoTimeout");
-        final String url = "http://127.0.0.1:" + System.getProperty(
-                EmbeddedTomEEContainer.TOMEE_EJBCONTAINER_HTTP_PORT)
-                + "/my-jaxrs-test/user/v1/userinfo/";
+        String url = String.format("http://%s:%s%s", tomeeConfig.getHost(),
+                tomeeConfig.getHttpPort(), "/my-jaxrs-test/user/v1/userinfo/");
         final Client client = ClientBuilder.newClient();
         // Use client properties the generic way
         client.property("http.connection.timeout", 500L);

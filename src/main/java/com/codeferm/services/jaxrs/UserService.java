@@ -1,9 +1,10 @@
 package com.codeferm.services.jaxrs;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,17 +22,6 @@ public class UserService {
 
     private static final Logger log = Logger.getLogger(UserService.class.
             getName());
-
-    /**
-     * Injected cache bean.
-     */
-    @EJB
-    private CacheBean cacheBean;
-    /**
-     * Our key/value bean.
-     */
-    @EJB
-    private KeyValueBean keyValueBean;
 
     @PostConstruct
     public final void init() {
@@ -53,7 +43,6 @@ public class UserService {
     @POST
     public final Response userInfo(final UserDto userDto) {
         log.info(String.format("userDto: %s", userDto.toString()));
-        keyValueBean.add(userDto.getUserName(), userDto.getUserName());
         // Set other fields if id = 1
         if (userDto.getId() == 1) {
             userDto.setUserName("test");
@@ -67,6 +56,23 @@ public class UserService {
         }
         // Return VersionDto
         return Response.ok(userDto).build();
+    }
+
+    /**
+     * Get user DTO list.
+     *
+     * @param userDto User DTO.
+     * @return Populated User DTO.
+     */
+    @Path("/userinfolist")
+    @POST
+    public final Response userInfoList(final UserDto userDto) {
+        log.info(String.format("userDto: %s", userDto.toString()));
+        final List<UserDto> list = new ArrayList<>();
+        list.add(userDto);
+        list.add(userDto);
+        // Return VersionDto
+        return Response.ok(list).build();
     }
 
 }

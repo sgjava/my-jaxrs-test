@@ -22,6 +22,7 @@
 
     <display-name>TomEE JAX-RS Test</display-name>
 
+<!--
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Protected Resource</web-resource-name>
@@ -43,4 +44,5 @@
     <security-role>
         <role-name>my-role</role-name>
     </security-role>
+    -->
 </web-app>
