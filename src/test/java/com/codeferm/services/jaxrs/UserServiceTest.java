@@ -88,7 +88,7 @@ public class UserServiceTest {
                 tomeeConfig.getHttpPort(), "/my-jaxrs-test/user/v1/userinfo/");
         final Client client = ClientBuilder.newClient();
         // Get back test user's info
-        final UserDto userDto = new UserDto(1, null, null);
+        final UserDto userDto = new UserDto(1, "test", "Test User");
         UserDto response = client.target(url).request().post(Entity.entity(
                 userDto, MediaType.APPLICATION_JSON), UserDto.class);
         assertNotNull(response);
@@ -132,7 +132,7 @@ public class UserServiceTest {
         httpConduit.getClient().setReceiveTimeout(500);
         httpConduit.getClient().setConnectionTimeout(500);
         // Get back test user's info
-        final UserDto userDto = new UserDto(1, null, null);
+        final UserDto userDto = new UserDto(1, "test", "Test User");
         UserDto response = null;
         response = request.post(Entity.entity(userDto,
                 MediaType.APPLICATION_JSON), UserDto.class);
@@ -153,7 +153,7 @@ public class UserServiceTest {
         client.property("http.connection.timeout", 500L);
         client.property("http.receive.timeout", 500L);
         // Get back test user's info
-        final UserDto userDto = new UserDto(1, null, null);
+        final UserDto userDto = new UserDto(1, "test", "Test User");
         UserDto response = client.target(url).request().post(Entity.entity(
                 userDto, MediaType.APPLICATION_JSON), UserDto.class);
         assertNotNull(response);

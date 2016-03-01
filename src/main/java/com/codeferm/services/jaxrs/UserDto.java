@@ -1,6 +1,7 @@
 package com.codeferm.services.jaxrs;
 
 import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author sgoldsmith
@@ -9,8 +10,11 @@ public class UserDto implements Serializable {
 
     private static final long serialVersionUID = 3077868741267353366L;
 
+    @NotNull
     private Integer id;
+    @NotNull
     private String userName;
+    @NotNull
     private String fullName;
 
     public UserDto() {

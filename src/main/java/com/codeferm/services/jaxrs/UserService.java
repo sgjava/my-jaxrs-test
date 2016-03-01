@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.validation.Valid;
+import javax.validation.executable.ValidateOnExecution;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -24,12 +26,12 @@ public class UserService {
             getName());
 
     @PostConstruct
-    public final void init() {
+    public void init() {
         log.info("PostConstruct");
     }
 
     @PreDestroy
-    public final void done() {
+    public void done() {
         log.info("PreDestroy");
     }
 
@@ -41,7 +43,9 @@ public class UserService {
      */
     @Path("/userinfo")
     @POST
-    public final Response userInfo(final UserDto userDto) {
+    @ValidateOnExecution
+    @Valid
+    public Response userInfo(@Valid final UserDto userDto) {
         log.info(String.format("userDto: %s", userDto.toString()));
         // Set other fields if id = 1
         if (userDto.getId() == 1) {
@@ -66,7 +70,9 @@ public class UserService {
      */
     @Path("/userinfolist")
     @POST
-    public final Response userInfoList(final UserDto userDto) {
+    @ValidateOnExecution
+    @Valid
+    public Response userInfoList(@Valid final UserDto userDto) {
         log.info(String.format("userDto: %s", userDto.toString()));
         final List<UserDto> list = new ArrayList<>();
         list.add(userDto);
