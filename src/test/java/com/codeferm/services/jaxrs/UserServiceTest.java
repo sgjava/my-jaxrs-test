@@ -1,6 +1,7 @@
 package com.codeferm.services.jaxrs;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
@@ -18,6 +19,7 @@ import org.junit.AfterClass;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -81,6 +83,7 @@ public class UserServiceTest {
     /**
      * Test JAX-RS client without proprietary timeouts.
      */
+    @Ignore
     @Test
     public final void testUserInfoNoTimeout() {
         log.info("testUserInfoNoTimeout");
@@ -106,9 +109,12 @@ public class UserServiceTest {
                 "/my-jaxrs-test/user/v1/userinfolist/");
         final Client client = ClientBuilder.newClient();
         final UserDto userDto = new UserDto(1, "test", "Test User");
+        final List<UserDto> list = new ArrayList<>();
+        list.add(userDto);
+        list.add(userDto);
         // Get back test users info list
         List<UserDto> response = client.target(url).request().post(Entity.
-                entity(userDto, MediaType.APPLICATION_JSON),
+                entity(list, MediaType.APPLICATION_JSON),
                 new GenericType<List<UserDto>>() {
         });
         assertNotNull(response);
@@ -118,6 +124,7 @@ public class UserServiceTest {
     /**
      * Test JAX-RS client with proprietary timeouts.
      */
+    @Ignore
     @Test(expected = Exception.class)
     public final void testUserInfoTimeoutProprietary() {
         log.info("testUserInfoTimeoutProprietary");
@@ -143,6 +150,7 @@ public class UserServiceTest {
     /**
      * Test JAX-RS client with generic style timeouts.
      */
+    @Ignore
     @Test(expected = Exception.class)
     public final void testUserInfoTimeout() {
         log.info("testUserInfoTimeout");

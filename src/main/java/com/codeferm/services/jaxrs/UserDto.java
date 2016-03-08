@@ -18,7 +18,7 @@ public class UserDto extends BaseDto {
     public UserDto() {
     }
 
-    @ConstructorProperties({"userName", "fullName"})
+    @ConstructorProperties({"id", "userName", "fullName"})
     public UserDto(final Integer id, final String userName,
             final String fullName) {
         super(id);

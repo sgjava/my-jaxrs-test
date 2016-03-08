@@ -1,6 +1,5 @@
 package com.codeferm.services.jaxrs;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -72,13 +71,10 @@ public class UserService {
     @POST
     @ValidateOnExecution
     @Valid
-    public Response userInfoList(@Valid final UserDto userDto) {
-        log.info(String.format("userDto: %s", userDto.toString()));
-        final List<UserDto> list = new ArrayList<>();
-        list.add(userDto);
-        list.add(userDto);
+    public Response userInfoList(@Valid final List<UserDto> userDtoList) {
+        log.info(String.format("userDtoList: %s", userDtoList.toString()));
         // Return VersionDto
-        return Response.ok(list).build();
+        return Response.ok(userDtoList).build();
     }
 
 }
