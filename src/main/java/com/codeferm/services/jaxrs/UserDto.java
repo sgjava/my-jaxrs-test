@@ -1,17 +1,15 @@
 package com.codeferm.services.jaxrs;
 
-import java.io.Serializable;
+import java.beans.ConstructorProperties;
 import javax.validation.constraints.NotNull;
 
 /**
  * @author sgoldsmith
  */
-public class UserDto implements Serializable {
+public class UserDto extends BaseDto {
 
     private static final long serialVersionUID = 3077868741267353366L;
 
-    @NotNull
-    private Integer id;
     @NotNull
     private String userName;
     @NotNull
@@ -20,19 +18,12 @@ public class UserDto implements Serializable {
     public UserDto() {
     }
 
+    @ConstructorProperties({"userName", "fullName"})
     public UserDto(final Integer id, final String userName,
             final String fullName) {
-        this.id = id;
+        super(id);
         this.userName = userName;
         this.fullName = fullName;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(final Integer id) {
-        this.id = id;
     }
 
     public String getUserName() {
@@ -53,7 +44,7 @@ public class UserDto implements Serializable {
 
     @Override
     public String toString() {
-        return "UserDto{" + "id=" + id + ", userName=" + userName
+        return "UserDto{" + "id=" + getId() + ", userName=" + userName
                 + ", fullName=" + fullName + '}';
     }
 }
