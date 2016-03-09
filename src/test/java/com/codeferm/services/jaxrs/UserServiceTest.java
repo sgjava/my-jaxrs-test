@@ -162,7 +162,6 @@ public class UserServiceTest {
         list.add(userDto);
         final UserListDto userListDto = new UserListDto(list);
         final ComplexDto complexDto = new ComplexDto(userListDto);
-
         ComplexDto response = client.target(url).request().post(Entity.entity(
                 complexDto, MediaType.APPLICATION_JSON), ComplexDto.class);
         assertNotNull(response);

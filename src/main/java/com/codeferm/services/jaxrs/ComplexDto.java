@@ -12,6 +12,7 @@ public class ComplexDto {
 
     @NotNull
     private UserListDto userListDto;
+    private UserListDto retUserListDto;
 
     public ComplexDto() {
     }
@@ -19,18 +20,28 @@ public class ComplexDto {
     @ConstructorProperties({"userListDto"})
     public ComplexDto(final UserListDto userListDto) {
         this.userListDto = userListDto;
+        this.retUserListDto = userListDto;
     }
 
-    public UserListDto getUserListDto() {
+    public final UserListDto getUserListDto() {
         return userListDto;
     }
 
-    public void setUserListDto(UserListDto userListDto) {
+    public final void setUserListDto(final UserListDto userListDto) {
         this.userListDto = userListDto;
+    }
+
+    public final UserListDto getRetUserListDto() {
+        return retUserListDto;
+    }
+
+    public final void setRetUserListDto(final UserListDto retUserListDto) {
+        this.retUserListDto = retUserListDto;
     }
 
     @Override
     public String toString() {
-        return "ComplexDto{" + "userListDto=" + getUserListDto() + '}';
+        return "ComplexDto{" + "userListDto=" + getUserListDto()
+                + ", retUserListDto=" + getRetUserListDto() + '}';
     }
 }
