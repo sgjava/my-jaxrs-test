@@ -9,6 +9,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -114,9 +115,56 @@ public class UserServiceTest {
         list.add(userDto);
         // Get back test users info list
         List<UserDto> response = client.target(url).request().post(Entity.
-                entity(list, MediaType.APPLICATION_JSON),
+                entity(new GenericEntity<List<UserDto>>(list) {
+                }, MediaType.APPLICATION_JSON),
                 new GenericType<List<UserDto>>() {
         });
+        assertNotNull(response);
+        log.info(String.format("Response: %s", response));
+    }
+
+    /**
+     * Test JAX-RS client with List of DTOs.
+     */
+    @Test
+    public final void testUserListDto() {
+        log.info("testUserListDto");
+        String url = String.format("http://%s:%s%s", tomeeConfig.getHost(),
+                tomeeConfig.getHttpPort(),
+                "/my-jaxrs-test/user/v1/userdtolist/");
+        final Client client = ClientBuilder.newClient();
+        final UserDto userDto = new UserDto(1, "test", "Test User");
+        final List<UserDto> list = new ArrayList<>();
+        list.add(userDto);
+        list.add(userDto);
+        final UserListDto userListDto = new UserListDto(list);
+        // Get back test users info list
+        UserListDto response = client.target(url).request().post(Entity.
+                entity(userListDto, MediaType.APPLICATION_JSON),
+                UserListDto.class);
+        assertNotNull(response);
+        log.info(String.format("Response: %s", response));
+    }
+
+    /**
+     * Test JAX-RS client without proprietary timeouts.
+     */
+    @Test
+    public final void testComplexDto() {
+        log.info("testComplexDto");
+        String url = String.format("http://%s:%s%s", tomeeConfig.getHost(),
+                tomeeConfig.getHttpPort(), "/my-jaxrs-test/user/v1/complex/");
+        final Client client = ClientBuilder.newClient();
+        // Get back test user's info
+        final UserDto userDto = new UserDto(1, "test", "Test User");
+        final List<UserDto> list = new ArrayList<>();
+        list.add(userDto);
+        list.add(userDto);
+        final UserListDto userListDto = new UserListDto(list);
+        final ComplexDto complexDto = new ComplexDto(userListDto);
+
+        ComplexDto response = client.target(url).request().post(Entity.entity(
+                complexDto, MediaType.APPLICATION_JSON), ComplexDto.class);
         assertNotNull(response);
         log.info(String.format("Response: %s", response));
     }

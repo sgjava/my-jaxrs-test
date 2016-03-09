@@ -57,7 +57,7 @@ public class UserService {
         } catch (InterruptedException e) {
             log.severe(e.getMessage());
         }
-        // Return VersionDto
+        // Return DTO
         return Response.ok(userDto).build();
     }
 
@@ -73,8 +73,39 @@ public class UserService {
     @Valid
     public Response userInfoList(@Valid final List<UserDto> userDtoList) {
         log.info(String.format("userDtoList: %s", userDtoList.toString()));
-        // Return VersionDto
+        // Return DTO
         return Response.ok(userDtoList).build();
     }
 
+    /**
+     * Get user DTO list.
+     *
+     * @param userDto User DTO.
+     * @return Populated User DTO.
+     */
+    @Path("/userdtolist")
+    @POST
+    @ValidateOnExecution
+    @Valid
+    public Response userListDto(@Valid final UserListDto userListDto) {
+        log.info(String.format("userListDto: %s", userListDto.toString()));
+        // Return DTO
+        return Response.ok(userListDto).build();
+    }
+
+    /**
+     * Get user DTO list.
+     *
+     * @param userDto User DTO.
+     * @return Populated User DTO.
+     */
+    @Path("/complex")
+    @POST
+    @ValidateOnExecution
+    @Valid
+    public Response complex(@Valid final ComplexDto complexDto) {
+        log.info(String.format("complexDto: %s", complexDto.toString()));
+        // Return DTO
+        return Response.ok(complexDto).build();
+    }
 }
